@@ -1,0 +1,125 @@
+# This YAML file describes your package. Stack will automatically generate a
+# Cabal file when you run `stack build`. See the hpack website for help with
+# this file: <https://github.com/sol/hpack>.
+name: Intrigue
+version: '0.0.0'
+github: "kleidukos/Intrigue"
+license: MIT
+author: "Kleidukos"
+maintainer: "Kleidukos"
+
+extra-source-files:
+- CHANGELOG.md
+- LICENSE.md
+- package.yaml
+- README.md
+- stack.yaml
+
+default-extensions:
+  - ApplicativeDo
+  - BangPatterns
+  - ConstraintKinds
+  - DataKinds
+  - DefaultSignatures
+  - DeriveAnyClass
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveGeneric
+  - DeriveLift
+  - DeriveTraversable
+  - DerivingStrategies
+  - DuplicateRecordFields 
+  - EmptyCase
+  - ExistentialQuantification
+  - FlexibleContexts
+  - FlexibleInstances
+  - FunctionalDependencies
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - KindSignatures
+  - LambdaCase
+  - MultiParamTypeClasses
+  - MultiWayIf
+  - NamedFieldPuns
+  - OverloadedStrings
+  - PatternSynonyms
+  - RankNTypes
+  - RecordWildCards
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - TupleSections
+  - TypeApplications
+  - TypeFamilies
+  - TypeFamilyDependencies
+  - TypeOperators
+
+when:
+  - condition: "impl(ghc >= 8.4.4)"
+    then:
+      ghc-options:
+        - -Wall
+        - -Wcompat
+        - -Werror
+        - -Widentities
+        - -Wincomplete-record-updates
+        - -Wincomplete-uni-patterns
+        - -Wpartial-fields
+        - -Wredundant-constraints
+        - -fhide-source-paths
+        - -Wno-unused-do-bind
+    else:
+      ghc-options:
+        - -Wall
+        - -Wcompat
+        - -Werror
+        - -Widentities
+        - -Wincomplete-record-updates
+        - -Wincomplete-uni-patterns
+        - -Wredundant-constraints
+        - -fhide-source-paths
+        - -Wno-unused-do-bind
+
+library:
+  dependencies:
+  - base-noprelude
+  - containers
+  - relude
+  - text
+  - megaparsec
+  - parser-combinators
+  source-dirs: src
+
+executables:
+  Intrigue:
+    source-dirs: app
+    main: Main.hs
+    dependencies:
+    - base-noprelude
+    - Intrigue
+    - relude
+    ghc-options:
+    - -rtsopts
+    - -threaded
+    - -with-rtsopts=-N
+
+benchmarks:
+  Intrigue-benchmarks:
+    source-dirs: benchmark
+    main: Main.hs
+    dependencies:
+    - base-noprelude
+    - Intrigue
+    - criterion
+
+tests:
+  Intrigue-test:
+    source-dirs: test
+    main: Main.hs
+    dependencies:
+    - base-noprelude
+    - Intrigue
+    - relude
+    - tasty
+    - tasty-hspec
+    - megaparsec

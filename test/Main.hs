@@ -8,13 +8,16 @@ import Test.Tasty
 import Test.Tasty.Hspec
 
 import qualified Test.Parsing as Parsing
+import qualified Test.Evaluating as Evaluating
 
 main :: IO ()
 main = do
     parsingSpec <- testSpec "Parsing" Parsing.spec
+    evaluatingSpec <- testSpec "Evaluating" Evaluating.spec
     Test.Tasty.defaultMain
       (testGroup "Intrigue"
         [ parsingSpec
+        , evaluatingSpec
         ]
       )
 

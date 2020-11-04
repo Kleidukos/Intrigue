@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0c30cd94effed0011a1cec524afd7851c8956b4f47d0026f5fe12e53b88afb14
+-- hash: 4c11c235e119ef856020b1b844889ef2e8d470a956246974dfa8845ff274d4ea
 
 name:           Intrigue
 version:        0.0.0
@@ -27,6 +27,8 @@ source-repository head
 
 library
   exposed-modules:
+      Intrigue
+      Intrigue.Eval
       Intrigue.Lexer
       Intrigue.Parser
       Intrigue.Types
@@ -39,11 +41,13 @@ library
   default-extensions: ApplicativeDo BangPatterns ConstraintKinds DataKinds DefaultSignatures DeriveAnyClass DeriveFoldable DeriveFunctor DeriveGeneric DeriveLift DeriveTraversable DerivingStrategies DuplicateRecordFields EmptyCase ExistentialQuantification FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns OverloadedStrings PatternSynonyms RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TupleSections TypeApplications TypeFamilies TypeFamilyDependencies TypeOperators
   build-depends:
       base-noprelude
-    , containers
     , megaparsec
     , parser-combinators
     , relude
     , text
+    , transformers
+    , unordered-containers
+    , vector
   if impl(ghc >= 8.4.4)
     ghc-options: -Wall -Wcompat -Werror -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -fhide-source-paths -Wno-unused-do-bind
   else
@@ -72,6 +76,7 @@ test-suite Intrigue-test
   type: exitcode-stdio-1.0
   main-is: Main.hs
   other-modules:
+      Test.Evaluating
       Test.Parsing
       Paths_Intrigue
   hs-source-dirs:
@@ -84,6 +89,7 @@ test-suite Intrigue-test
     , relude
     , tasty
     , tasty-hspec
+    , vector
   if impl(ghc >= 8.4.4)
     ghc-options: -Wall -Wcompat -Werror -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wpartial-fields -Wredundant-constraints -fhide-source-paths -Wno-unused-do-bind
   else

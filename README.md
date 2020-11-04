@@ -5,7 +5,7 @@ Very unsuitable for production.
 
 It also serves as a playground to try out:
 * Megaparsec (instead of the venerable Parsec) for lexing and parsing
-* MTL for holding state and general program architecture
+* Transformers for holding state and general program architecture
 
 ## Build and Run
 

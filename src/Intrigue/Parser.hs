@@ -5,12 +5,13 @@ import qualified Data.Text                      as T
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
+import qualified Data.Vector as V
 
 import Prelude hiding (many)
 import Intrigue.Types
 import Intrigue.Lexer
 
-parseAtom :: Parser Lisp
+parseAtom :: Parser AST
 parseAtom = do
   let atomHead = oneOf ("!$€%&|*+-/:<=>?@^_~" :: [Token Text])
   beginning <- letterChar <|> atomHead
@@ -21,13 +22,13 @@ parseAtom = do
         "#f" -> Bool False
         _    -> Atom $ T.pack atom
 
-parseText :: Parser Lisp
+parseText :: Parser AST
 parseText = do
   char '"'
   x <- manyTill L.charLiteral (char '"')
   pure $ String $ T.pack x
 
-parseCharacter :: Parser Lisp
+parseCharacter :: Parser AST
 parseCharacter = do
   chunk "#\\"
   let identifiers = oneOf ("()!$€%&|*+-/:<=>?@^_~" :: [Token Text])
@@ -38,28 +39,28 @@ parseCharacter = do
    <|> identifiers
   pure $ Character x
 
-parseNumber :: Parser Lisp
+parseNumber :: Parser AST
 parseNumber = Number <$> integer
 
-parseNegNumber :: Parser Lisp
+parseNegNumber :: Parser AST
 parseNegNumber = Number <$> signedInteger
 
-parseSExp :: Parser Lisp
+parseSExp :: Parser AST
 parseSExp =
-  List . concat <$> parens (many parseExp `sepBy` (char ' ' <|> char '\n'))
+  List . V.fromList . concat <$> parens (many parseExp `sepBy` (char ' ' <|> char '\n'))
 
-parseQuote :: Parser Lisp
+parseQuote :: Parser AST
 parseQuote = do
   char '\''
   x <- parseExp
-  pure $ List [Atom $ "quote", x]
+  pure $ Quote x
 
-parseNil :: Parser Lisp
+parseNil :: Parser AST
 parseNil = do
   chunk "Nil"
   pure Nil
 
-parseTerm :: Parser Lisp
+parseTerm :: Parser AST
 parseTerm = (parseNil <?> "Nil")
         <|> (parseNumber <?> "Number")
         <|> try (parseNegNumber <?> "negative Number")
@@ -69,5 +70,5 @@ parseTerm = (parseNil <?> "Nil")
         <|> (parseQuote <?> "Quote")
         <|> (parseSExp <?> "S-Expression")
 
-parseExp :: Parser Lisp
+parseExp :: Parser AST
 parseExp = makeExprParser parseTerm [] <?> "Expression"

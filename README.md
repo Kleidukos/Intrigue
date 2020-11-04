@@ -1,4 +1,4 @@
-# [Intrigue][] ![Simple Haskell][Simple Haskell]
+# [Intrigue][] [![GitHub Actions][Github Actions]](https://github.com/Kleidukos/Intrigue/actions) ![Simple Haskell][Simple Haskell]
 
 This is my implementation of a R⁵RS Scheme interpreter.  
 Very unsuitable for production.
@@ -22,3 +22,4 @@ I wish to give my thanks to
 
 [Intrigue]: https://github.com/kleidukos/Intrigue
 [Simple Haskell]: https://www.simplehaskell.org/badges/badge2.svg
+[GitHub Actions]: https://github.com/Kleidukos/Intrigue/workflows/CI/badge.svg

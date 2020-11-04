@@ -10,5 +10,5 @@ packages:
   - '.'
 
 nix:
-  enable: true
+  enable: false 
   packages: [glpk, pcre, zlib]

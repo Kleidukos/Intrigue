@@ -12,7 +12,7 @@ import Intrigue.Types
 import Intrigue.Lexer
 
 nonAlphaNumTokens :: [Token Text]
-nonAlphaNumTokens = "!$€%&|*+-/:<=>?@^_~"
+nonAlphaNumTokens = "!?¡¿$€%&|*×÷+-/:<=>@^_~"
 
 parseAtom :: Parser AST
 parseAtom = do
@@ -46,7 +46,10 @@ parseNumber :: Parser AST
 parseNumber = Number <$> integer
 
 parseNegNumber :: Parser AST
-parseNegNumber = Number <$> signedInteger
+parseNegNumber = do
+  char '-'
+  d <- integer
+  pure . Number . negate $ d
 
 parseSExp :: Parser AST
 parseSExp =
@@ -55,8 +58,7 @@ parseSExp =
 parseQuote :: Parser AST
 parseQuote = do
   char '\''
-  x <- parseExp
-  pure $ Quote x
+  Quote <$> parseExp
 
 parseNil :: Parser AST
 parseNil = do

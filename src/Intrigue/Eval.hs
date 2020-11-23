@@ -9,7 +9,6 @@ import Intrigue.Types
 eval :: AST -> EvalM AST
 eval ast = do
   liftIO $ putTextLn "Evaluating ast"
-  liftIO $ print ast
   case ast of
     b@(Bool _)      -> pure b
     s@(String _)    -> pure s
@@ -29,16 +28,13 @@ evalAtom t = do
     Just val -> pure val 
 
 evalList :: AST -> EvalM AST
-evalList (List v) = do
-  liftIO $ putTextLn "Evaluating List"
-  liftIO $ print v
+evalList (List v) =
   case V.head v of
       List listHead -> 
         case V.length v of
           0 -> List <$> traverse eval v
           _ -> case V.head listHead of
                 Atom "lambda" -> do
-                  liftIO $ putTextLn "Evaluating Lambda"
                   let body = (V.tail listHead) V.! 1
                   let parameters = getLambdaParams $ (V.head $ V.tail listHead) 
                   let arguments = V.tail v
@@ -51,7 +47,6 @@ evalList (List v) = do
                     n ->
                       error $ "Error: Bad constructor found when evaluating Lambda, expected List but found: " <> (show n)
                 _ -> do
-                  liftIO $ putTextLn "No match"
                   pure $ List v -- this is data, return data.
       _ -> pure $ List v
 evalList n =
@@ -65,13 +60,7 @@ evalLambda parameters body arguments = do
   eval body
 
 evalLambdaAtom :: AST -> Vector Text -> Vector AST -> EvalM AST
-evalLambdaAtom body parameters arguments = do
-  putTextLn "Body"
-  print body
-  putTextLn "Parameters"
-  print parameters
-  putTextLn "Arguments"
-  print arguments
+evalLambdaAtom body parameters arguments =
   pure $ List $ V.fromList [Lambda parameters body, List arguments]
 
 getLambdaParams :: AST -> Vector Text

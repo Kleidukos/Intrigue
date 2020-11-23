@@ -11,9 +11,12 @@ import Prelude hiding (many)
 import Intrigue.Types
 import Intrigue.Lexer
 
+nonAlphaNumTokens :: [Token Text]
+nonAlphaNumTokens = "!$€%&|*+-/:<=>?@^_~"
+
 parseAtom :: Parser AST
 parseAtom = do
-  let atomHead = oneOf ("!$€%&|*+-/:<=>?@^_~" :: [Token Text])
+  let atomHead = oneOf nonAlphaNumTokens
   beginning <- letterChar <|> atomHead
   rest  <- many (letterChar <|> digitChar <|> atomHead)
   let atom = [beginning] <> rest
@@ -31,7 +34,7 @@ parseText = do
 parseCharacter :: Parser AST
 parseCharacter = do
   chunk "#\\"
-  let identifiers = oneOf ("()!$€%&|*+-/:<=>?@^_~" :: [Token Text])
+  let identifiers = oneOf nonAlphaNumTokens
                     <|> letterChar
                     <|> digitChar
   x <- (string "space" >> pure ' ')

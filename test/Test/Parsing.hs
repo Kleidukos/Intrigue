@@ -1,6 +1,5 @@
 module Test.Parsing where
 
--- import qualified Test.Tasty
 import Test.Tasty.Hspec
 import qualified Data.Vector as V
 import Text.Megaparsec hiding (parse)

@@ -34,12 +34,9 @@ parseText = do
 parseCharacter :: Parser AST
 parseCharacter = do
   chunk "#\\"
-  let identifiers = oneOf nonAlphaNumTokens
-                    <|> letterChar
-                    <|> digitChar
   x <- (string "space" >> pure ' ')
    <|> (string "newline" >> pure '\n')
-   <|> identifiers
+   <|> printChar
   pure $ Character x
 
 parseNumber :: Parser AST

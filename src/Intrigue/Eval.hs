@@ -35,8 +35,8 @@ evalList (List v) =
           0 -> List <$> traverse eval v
           _ -> case V.head listHead of
                 Atom "lambda" -> do
-                  let body = (V.tail listHead) V.! 1
-                  let parameters = getLambdaParams $ (V.head $ V.tail listHead) 
+                  let body = listHead V.! 2 
+                  let parameters = getLambdaParams $ V.head (V.tail listHead) 
                   let arguments = V.tail v
                   evalLambdaAtom body parameters arguments
                 Lambda parameters body ->
@@ -45,17 +45,17 @@ evalList (List v) =
                       arguments <- traverse eval arguments'
                       evalLambda parameters body arguments
                     n ->
-                      error $ "Error: Bad constructor found when evaluating Lambda, expected List but found: " <> (show n)
+                      error $ "Error: Bad constructor found when evaluating Lambda, expected List but found: " <> show n
                 _ -> do
                   pure $ List v -- this is data, return data.
       _ -> pure $ List v
 evalList n =
-  error $ "Error: Bad constructor found when evaluating List, expected List but found: " <> (show n)
+  error $ "Error: Bad constructor found when evaluating List, expected List but found: " <> show n
 
 evalLambda :: Vector Text -> AST -> Vector AST -> EvalM AST
 evalLambda parameters body arguments = do
   env' <- get
-  let env = (fromVector $ V.zip parameters arguments) <> env'
+  let env = fromVector (V.zip parameters arguments) <> env'
   put env
   eval body
 
@@ -70,21 +70,6 @@ getLambdaParams ast = error $ "Bad datatype for lambda argVector: Expected List,
 getAtomContent :: AST -> Text
 getAtomContent (Atom content) = content
 getAtomContent ast = error $ "Bad datatype: Expected Atom, got " <> prettyPrint ast
-
--- argsToParams :: Vector Text -> Vector AST -> AST -> AST
--- argsToParams parameters arguments (List body) =
---   fmap (\expr -> 
---           case expr of
---             Atom x ->
---               case HM.lookup x assoc of
---                 Just value -> value
---                 Nothing    -> error $ "Could not find argument for parameter " <> show (Atom x)
---             _ -> expr)
---       body
---   where
---     assoc = fromVector $
---               V.zip parameters arguments
--- argsToParams _ _ _ = error "Bad argument!"
 
 fromVector :: (Eq a, Hashable a) => Vector (a, b) -> HashMap a b
 fromVector = V.foldr' (\(key, value) acc -> HM.insert key value acc) HM.empty

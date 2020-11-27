@@ -22,7 +22,7 @@ eval ast = do
 
 evalAtom :: Text -> EvalM AST
 evalAtom t = do
-  mVal <- gets (HM.lookup t)
+  mVal <- asks (HM.lookup t)
   case mVal of
     Nothing -> error $ "unbound var " <> t
     Just val -> pure val 
@@ -54,10 +54,9 @@ evalList n =
 
 evalLambda :: Vector Text -> AST -> Vector AST -> EvalM AST
 evalLambda parameters body arguments = do
-  env' <- get
+  env' <- ask
   let env = fromVector (V.zip parameters arguments) <> env'
-  put env
-  eval body
+  local (const env) (eval body)
 
 evalLambdaAtom :: AST -> Vector Text -> Vector AST -> EvalM AST
 evalLambdaAtom body parameters arguments =

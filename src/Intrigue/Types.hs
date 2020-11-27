@@ -28,12 +28,12 @@ prettyPrint (Bool True)        = "#t"
 prettyPrint (Bool False)       = "#f"
 prettyPrint Nil                = "Nil"
 prettyPrint (Lambda _ _ )      = "<lambda>"
-prettyPrint (List contents)    = "(" <> (D.unwords $ prettyPrint <$> contents) <> ")"
+prettyPrint (List contents)    = "(" <> D.unwords (prettyPrint <$> contents) <> ")"
 
-newtype EvalM (a :: Type) = EvalM {runEval :: (StateT (HashMap Text AST) IO a)}
+newtype EvalM (a :: Type) = EvalM {runEval :: ReaderT (HashMap Text AST) IO a}
   deriving newtype ( Functor
                    , Applicative
                    , Monad
-                   , MonadState (HashMap Text AST) 
+                   , MonadReader (HashMap Text AST) 
                    , MonadIO
                    )

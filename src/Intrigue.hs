@@ -10,7 +10,7 @@ parseLine :: Text -> Either (ParseErrorBundle Text Void) AST
 parseLine = runParser (parseExp <* eof) "<line>"
 
 evalProgram :: Text -> IO AST
-evalProgram program = evalStateT (runEval $ eval ast) HM.empty
+evalProgram program = runReaderT (runEval $ eval ast) HM.empty
   where
     ast = fromRight (error "boo") $ parseLine program
 

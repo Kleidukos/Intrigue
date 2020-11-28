@@ -1,8 +1,9 @@
 {-# LANGUAGE StrictData #-}
 module Intrigue.Types where
 
-import qualified Data.Text    as T
-import qualified Text.Display as D
+import qualified Data.HashMap.Strict as HM
+import qualified Data.Text           as T
+import qualified Text.Display        as D
 
 data AST
   = Atom      {-# UNPACK #-} Text
@@ -17,6 +18,18 @@ data AST
   | Nil
   deriving stock (Show, Eq)
 
+data Environment =
+  Environment { userEnv :: HashMap Text AST
+              , primEnv :: HashMap Text (Vector AST -> EvalM AST)
+              }
+
+newtype EvalM (a :: Type) = EvalM {runEval :: ReaderT Environment IO a}
+  deriving newtype ( Functor
+                   , Applicative
+                   , Monad
+                   , MonadReader Environment
+                   , MonadIO
+                   )
 
 prettyPrint :: AST -> Text
 prettyPrint (Atom atom)        = atom
@@ -30,10 +43,11 @@ prettyPrint Nil                = "Nil"
 prettyPrint (Lambda _ _ )      = "<lambda>"
 prettyPrint (List contents)    = "(" <> D.unwords (prettyPrint <$> contents) <> ")"
 
-newtype EvalM (a :: Type) = EvalM {runEval :: ReaderT (HashMap Text AST) IO a}
-  deriving newtype ( Functor
-                   , Applicative
-                   , Monad
-                   , MonadReader (HashMap Text AST) 
-                   , MonadIO
-                   )
+dumpEnv :: EvalM ()
+dumpEnv = do
+  putTextLn "Env Dump ===="
+  Environment{..} <- ask
+  let primKeys = HM.keys primEnv
+  print primKeys
+  print userEnv
+  putTextLn "============="

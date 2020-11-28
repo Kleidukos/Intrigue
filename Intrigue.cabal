@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 4c11c235e119ef856020b1b844889ef2e8d470a956246974dfa8845ff274d4ea
+-- hash: f1a1c98aaa7b6a5aec2d3a3a7bda845003701597a3126104cb8f5b355aaea6f0
 
 name:           Intrigue
 version:        0.0.0
@@ -28,6 +28,10 @@ source-repository head
 library
   exposed-modules:
       Intrigue
+      Intrigue.Environment
+      Intrigue.Environment.Char
+      Intrigue.Environment.Num
+      Intrigue.Environment.Utils
       Intrigue.Eval
       Intrigue.Lexer
       Intrigue.Parser

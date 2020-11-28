@@ -9,9 +9,13 @@ spec :: Spec
 spec = parallel $ do
   describe "No change for self-evaluating data structures" $ do
     it "'(1 2 '(3 4))" $ do
-      (prettyPrint <$> evalProgram "(1 2 '(3 4))")
-        `shouldReturn` "(1 2 '(3 4))"
+      (prettyPrint <$> evalProgram "'(1 2 '(3 4))")
+        `shouldReturn` "'(1 2 '(3 4))"
   describe "Addition" $ do
     it "(+ 1 2 3 4)" $ do
       (prettyPrint <$> evalProgram "(+ 1 2 3 4)")
         `shouldReturn` "10"
+  describe "Subtraction" $ do
+    it "(- 4 3 2 1)" $
+      (prettyPrint <$> evalProgram "(- 4 3 2 1)")
+        `shouldReturn` "-2"

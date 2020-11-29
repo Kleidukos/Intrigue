@@ -15,7 +15,7 @@ cdr :: Vector AST -> EvalM AST
 cdr argVec =
   case V.head argVec of
     List args ->
-      pure $ List $ V.tail $ args
+      pure $ List $ V.tail args
     x -> error $ "Type mismatch, expected two characters but got " <> show x
 
 charEq :: AST -> AST -> EvalM AST

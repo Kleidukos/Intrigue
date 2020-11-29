@@ -49,7 +49,7 @@ spec = parallel $ do
                          )
   describe "Nil" $
     it "Nil" $ runParser (parseNil <* eof) "<test>" "Nil"
-      `shouldBe` Right ( Nil )
+      `shouldBe` Right Nil
   describe "Character" $ do
     let parse = runParser (parseCharacter <* eof) "<test>"
     it "#\\a" $

@@ -60,8 +60,8 @@ transitive fun args = and $ go [] (args V.! 0) (args V.! 1) (V.drop 2 args)
   where
     go :: [Bool] -> AST -> AST -> Vector AST -> [Bool]
     go boolList prev current rest | V.null rest = if fun prev current
-                                                      then True:boolList
-                                                      else False:boolList
+                                                  then True:boolList
+                                                  else False:boolList
                                   | otherwise = if fun prev current
                                                 then go (True:boolList) current (V.head rest) (V.tail rest)
                                                 else go (False:boolList) current (V.head rest) (V.tail rest)

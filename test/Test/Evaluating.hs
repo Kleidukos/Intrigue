@@ -7,10 +7,10 @@ import Intrigue
 
 spec :: Spec
 spec = parallel $ do
-  describe "No change for self-evaluating data structures" $ do
-    it "'(1 2 '(3 4))" $ do
-      (prettyPrint <$> evalProgram "'(1 2 '(3 4))")
-        `shouldReturn` "'(1 2 '(3 4))"
+  describe "Quote" $ do
+    it "(car '(1 2 3))" $ do
+      (prettyPrint <$> evalProgram "(car '(1 2 3))")
+        `shouldReturn` "1"
   describe "Numerical operations" $ do
     it "(+)" $
       (prettyPrint <$> evalProgram "(+ 1 2 3 4)")

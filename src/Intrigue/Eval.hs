@@ -15,7 +15,7 @@ eval ast =
     n@(Number _)    -> pure n
     l@Lambda{}      -> pure l
     n@Nil           -> pure n
-    Quote expr      -> pure $ Quote expr
+    Quote expr      -> pure $ expr
     Atom t          -> evalAtom t
     List v          -> evalList (List v) 
 

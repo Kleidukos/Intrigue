@@ -56,15 +56,9 @@ numOp fun args =
   else error $ "Argument mismatch, expected a list of numbers, got " <> show args
 
 transitive :: (AST -> AST -> Bool) -> Vector AST -> Bool
-transitive fun args = and $ go [] (args V.! 0) (args V.! 1) (V.drop 2 args)
+transitive fun args = and $ fmap (uncurry fun) pairs
   where
-    go :: [Bool] -> AST -> AST -> Vector AST -> [Bool]
-    go boolList prev current rest | V.null rest = if fun prev current
-                                                  then True:boolList
-                                                  else False:boolList
-                                  | otherwise = if fun prev current
-                                                then go (True:boolList) current (V.head rest) (V.tail rest)
-                                                else go (False:boolList) current (V.head rest) (V.tail rest)
+    pairs = V.zip args (V.tail args)
 
 checkNumber :: AST -> Bool
 checkNumber (Number _) = True

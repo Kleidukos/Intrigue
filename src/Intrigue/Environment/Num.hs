@@ -49,6 +49,12 @@ isNegative args =
     Number n -> pure $ Bool $ n < 0
     x        -> error $ "Argument mismatch, expected a Number, got " <> show x
 
+maxNum :: Vector AST -> EvalM AST
+maxNum args = pure $ Number $ V.maximum $ fmap getNumberContent args
+
+minNum :: Vector AST -> EvalM AST
+minNum args = pure $ Number $ V.minimum $ fmap getNumberContent args
+
 numOp :: (Vector AST -> EvalM AST) -> Vector AST -> EvalM AST
 numOp fun args = 
   if all checkNumber args
@@ -61,6 +67,10 @@ transitive fun args = and $ V.zipWith fun args (V.tail args)
 checkNumber :: AST -> Bool
 checkNumber (Number _) = True
 checkNumber _          = False
+
+getNumberContent :: AST -> Integer
+getNumberContent (Number n) = n
+getNumberContent x = error $ "Argument mismatch, expected Number, got " <> prettyPrint x
 
 applyNumber :: (Integer -> Integer) -> AST -> AST
 applyNumber f (Number n) = Number $ f n

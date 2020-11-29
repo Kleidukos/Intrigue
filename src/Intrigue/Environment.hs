@@ -29,6 +29,8 @@ basePrimEnv =
   , ("zero?", numOp isZero)
   , ("positive?", numOp isPositive)
   , ("negative?", numOp isNegative)
+  , ("min", numOp minNum)
+  , ("max", numOp maxNum)
   , ("car", car)
   , ("cdr", cdr)
   ]

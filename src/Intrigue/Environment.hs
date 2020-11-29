@@ -20,4 +20,10 @@ basePrimEnv :: HashMap Text (Vector AST -> EvalM AST)
 basePrimEnv = 
   [ ("+", numOp add)
   , ("-", numOp sub)
+  , ("number?", isNumber)
+  , ("=", numOp equal)
+  , ("<", numOp lessThan)
+  , (">", numOp moreThan)
+  , ("<=", numOp lessOrEqual)
+  , (">=", numOp moreOrEqual)
   ]

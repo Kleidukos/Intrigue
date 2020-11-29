@@ -16,7 +16,7 @@ data AST
   | Lambda    {-# UNPACK #-} (Vector Text) -- ^ Bound names in our body
                              AST           -- ^ Function body
   | Nil
-  deriving stock (Show, Eq)
+  deriving stock (Show, Eq, Ord)
 
 data Environment =
   Environment { userEnv :: HashMap Text AST
@@ -31,6 +31,15 @@ newtype EvalM (a :: Type) = EvalM {runEval :: ReaderT Environment IO a}
                    , MonadIO
                    )
 
+dumpEnv :: EvalM ()
+dumpEnv = do
+  putTextLn "Env Dump ===="
+  Environment{..} <- ask
+  let primKeys = HM.keys primEnv
+  print primKeys
+  print userEnv
+  putTextLn "============="
+
 prettyPrint :: AST -> Text
 prettyPrint (Atom atom)        = atom
 prettyPrint (String str)       = "\"" <> str <> "\""
@@ -42,12 +51,3 @@ prettyPrint (Bool False)       = "#f"
 prettyPrint Nil                = "Nil"
 prettyPrint (Lambda _ _ )      = "<lambda>"
 prettyPrint (List contents)    = "(" <> D.unwords (prettyPrint <$> contents) <> ")"
-
-dumpEnv :: EvalM ()
-dumpEnv = do
-  putTextLn "Env Dump ===="
-  Environment{..} <- ask
-  let primKeys = HM.keys primEnv
-  print primKeys
-  print userEnv
-  putTextLn "============="

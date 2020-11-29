@@ -11,11 +11,25 @@ spec = parallel $ do
     it "'(1 2 '(3 4))" $ do
       (prettyPrint <$> evalProgram "'(1 2 '(3 4))")
         `shouldReturn` "'(1 2 '(3 4))"
-  describe "Addition" $ do
-    it "(+ 1 2 3 4)" $ do
+  describe "Numerical operations" $ do
+    it "(+)" $
       (prettyPrint <$> evalProgram "(+ 1 2 3 4)")
         `shouldReturn` "10"
-  describe "Subtraction" $ do
-    it "(- 4 3 2 1)" $
+    it "(-)" $
       (prettyPrint <$> evalProgram "(- 4 3 2 1)")
         `shouldReturn` "-2"
+    it "(number?)" $
+      (prettyPrint <$> evalProgram "(number? 3)")
+        `shouldReturn` "#t"
+    it "(=)" $
+      (prettyPrint <$> evalProgram "(= 3 3 3 3)")
+        `shouldReturn` "#t"
+    it "(>)" $
+      (prettyPrint <$> evalProgram "(> 4 3 2 1)")
+        `shouldReturn` "#t"
+    it "(<)" $
+      (prettyPrint <$> evalProgram "(< 4 3 2 1)")
+        `shouldReturn` "#f"
+    it "(>=)" $
+      (prettyPrint <$> evalProgram "(>= 4 3 2 4)")
+        `shouldReturn` "#f"

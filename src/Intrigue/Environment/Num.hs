@@ -31,6 +31,24 @@ lessOrEqual args = pure $ Bool $ transitive (<=) args
 moreOrEqual :: Vector AST -> EvalM AST
 moreOrEqual args = pure $ Bool $ transitive (>=) args
 
+isZero :: Vector AST -> EvalM AST
+isZero args =
+  case V.head args of
+    Number n -> pure $ Bool $ n == 0
+    x        -> error $ "Argument mismatch, expected a Number, got " <> show x
+
+isPositive :: Vector AST -> EvalM AST
+isPositive args =
+  case V.head args of
+    Number n -> pure $ Bool $ n > 0
+    x        -> error $ "Argument mismatch, expected a Number, got " <> show x
+
+isNegative :: Vector AST -> EvalM AST
+isNegative args =
+  case V.head args of
+    Number n -> pure $ Bool $ n < 0
+    x        -> error $ "Argument mismatch, expected a Number, got " <> show x
+
 numOp :: (Vector AST -> EvalM AST) -> Vector AST -> EvalM AST
 numOp fun args = 
   if all checkNumber args

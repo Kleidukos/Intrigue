@@ -26,4 +26,7 @@ basePrimEnv =
   , (">", numOp moreThan)
   , ("<=", numOp lessOrEqual)
   , (">=", numOp moreOrEqual)
+  , ("zero?", numOp isZero)
+  , ("positive?", numOp isPositive)
+  , ("negative?", numOp isNegative)
   ]

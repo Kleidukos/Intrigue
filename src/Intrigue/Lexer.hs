@@ -1,8 +1,10 @@
 module Intrigue.Lexer where
 
+import           Data.Text                      ( Text )
+import           Data.Void
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
-import qualified Text.Megaparsec.Char.Lexer as L
+import qualified Text.Megaparsec.Char.Lexer    as L
 
 type Parser = Parsec Void Text
 

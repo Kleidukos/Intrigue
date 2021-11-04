@@ -6,12 +6,13 @@ Very unsuitable for production.
 It also serves as a playground to try out:
 * Megaparsec (instead of the venerable Parsec) for lexing and parsing
 * Transformers for holding state and general program architecture
+* `text-display` to handle user-facing output
 
 ## Build and Run
 
-Run `$ stack build` or `cabal new-build` in order to build the project
+Run `$ cabal build`in order to build the project
 
-Run `$ stack test` or `cabal new-test` in order to run the test suite
+Run `$ cabal test` in order to run the test suite
 
 ## Acknowledgement
 

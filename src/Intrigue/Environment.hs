@@ -6,6 +6,9 @@ module Intrigue.Environment
   , module Intrigue.Environment
   ) where
 
+import Data.HashMap.Strict (HashMap)
+import Data.Text (Text)
+import Data.Vector (Vector)
 import qualified Data.HashMap.Strict as HM
 
 import Intrigue.Types

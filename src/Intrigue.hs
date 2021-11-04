@@ -1,6 +1,10 @@
 module Intrigue where
 
 import           Text.Megaparsec      hiding (parse)
+import Data.Void
+import Data.Text (Text)
+import Data.Either
+import Control.Monad.Reader
 
 import           Intrigue.Environment
 import           Intrigue.Eval

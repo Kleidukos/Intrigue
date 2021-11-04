@@ -1,13 +1,13 @@
 module Intrigue.Parser where
 
-import           Control.Monad.Combinators.Expr
+import Control.Monad.Combinators.Expr
+import Text.Megaparsec
+import Text.Megaparsec.Char
+import Data.Text (Text)
 import qualified Data.Text                      as T
-import           Text.Megaparsec
-import           Text.Megaparsec.Char
-import qualified Text.Megaparsec.Char.Lexer as L
 import qualified Data.Vector as V
+import qualified Text.Megaparsec.Char.Lexer as L
 
-import Prelude hiding (many)
 import Intrigue.Types
 import Intrigue.Lexer
 
@@ -50,7 +50,7 @@ parseNegNumber = do
 
 parseSExp :: Parser AST
 parseSExp =
-  List . V.fromList . concat <$> parens (many parseExp `sepBy` (char ' ' <|> char '\n'))
+  List . ASTList . V.fromList . concat <$> parens (many parseExp `sepBy` (char ' ' <|> char '\n'))
 
 parseQuote :: Parser AST
 parseQuote = do

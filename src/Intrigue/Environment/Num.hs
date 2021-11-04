@@ -1,5 +1,9 @@
 module Intrigue.Environment.Num where
 
+import Data.Foldable
+import Data.Text (unpack)
+import Data.Text.Display
+import Data.Vector (Vector)
 import qualified Data.Vector as V
 
 import Intrigue.Types
@@ -70,12 +74,12 @@ checkNumber _          = False
 
 getNumberContent :: AST -> Integer
 getNumberContent (Number n) = n
-getNumberContent x = error $ "Argument mismatch, expected Number, got " <> prettyPrint x
+getNumberContent x = error $ "Argument mismatch, expected Number, got " <> (unpack $ display x)
 
 applyNumber :: (Integer -> Integer) -> AST -> AST
 applyNumber f (Number n) = Number $ f n
-applyNumber _ x = error $ "Argument mismatch, expected Number, got " <> prettyPrint x
+applyNumber _ x = error $ "Argument mismatch, expected Number, got " <> (unpack $ display x)
 
 applyBinOp :: (Integer -> Integer -> Integer) -> AST -> AST -> AST
 applyBinOp f (Number n) (Number m) = Number $ f n m
-applyBinOp _ x y = error $ "Argument mismatch, expected Number, got " <> prettyPrint x <> " and " <> prettyPrint y
+applyBinOp _ x y = error $ unpack $ "Argument mismatch, expected Number, got " <> display x <> " and " <> display y

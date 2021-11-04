@@ -1,8 +1,8 @@
 module Test.Parsing where
 
-import Test.Tasty.Hspec
 import qualified Data.Vector as V
 import Text.Megaparsec hiding (parse)
+import Test.Hspec
 
 import Intrigue.Types
 import Intrigue.Parser
@@ -39,12 +39,12 @@ spec = parallel $ do
     let parse = runParser (parseQuote <* eof) "<test>"
     it "'(1 2 3)" $ do
       parse "'(1 2 3)"
-        `shouldBe` Right ( Quote (List $ V.fromList [ Number 1, Number 2, Number 3 ] ))
+        `shouldBe` Right ( Quote (List $ ASTList $ V.fromList [ Number 1, Number 2, Number 3 ] ))
   describe "S-Expression" $ do
     let parse = runParser (parseSExp <* eof) "<test>"
     it "(eqv? 'a 'a)" $ do
       parse "(eqv? 'a 'a)"
-        `shouldBe` Right ( List $ V.fromList
+        `shouldBe` Right ( List $ ASTList $ V.fromList
                              [Atom "eqv?",Quote (Atom "a"),Quote (Atom "a")]
                          )
   describe "Nil" $
@@ -68,4 +68,4 @@ spec = parallel $ do
     let parse = runParser (parseExp <* eof) "<test>"
     it "factorial" $
       parse "(define (factorial n) (if (= n 0) 1 (* n (factorial (- n 1)))))"
-        `shouldBe` Right (List $ V.fromList [Atom "define", List $ V.fromList [Atom "factorial",Atom "n"],List $ V.fromList [Atom "if",List $ V.fromList [Atom "=",Atom "n",Number 0],Number 1,List $ V.fromList [Atom "*",Atom "n",List $ V.fromList [Atom "factorial",List $ V.fromList [Atom "-",Atom "n",Number 1]]]]])
+        `shouldBe` Right (List $ ASTList $ V.fromList [Atom "define", List $ ASTList $ V.fromList [Atom "factorial",Atom "n"],List  $ ASTList $ V.fromList [Atom "if",List $ ASTList $ V.fromList [Atom "=",Atom "n",Number 0],Number 1,List $ ASTList $ V.fromList [Atom "*",Atom "n",List $ ASTList $ V.fromList [Atom "factorial",List $ ASTList $ V.fromList [Atom "-",Atom "n",Number 1]]]]])

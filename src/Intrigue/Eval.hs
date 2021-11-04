@@ -1,5 +1,10 @@
 module Intrigue.Eval where
 
+import Control.Monad.Reader 
+import Data.HashMap.Strict (HashMap)
+import Data.Hashable
+import Data.Text (Text)
+import Data.Vector (Vector)
 import qualified Data.HashMap.Strict as HM
 import qualified Data.Vector as V
 
@@ -20,13 +25,13 @@ eval ast =
     List v          -> evalList (List v) 
 
 evalList :: AST -> EvalM AST
-evalList (List v) =
+evalList (List (ASTList v)) =
   case V.head v of
-      List listHead -> 
+      List (ASTList listHead) -> 
         case V.length v of
-          0 -> List <$> traverse eval v
+          0 -> List . ASTList <$> traverse eval v
           _ -> do 
-            print listHead
+            liftIO $ print listHead
             case V.head listHead of
               Atom "lambda" -> do
                 let body = listHead V.! 2 
@@ -37,16 +42,16 @@ evalList (List v) =
                 applyFun x (V.tail v)
               Lambda parameters body ->
                 case V.last v of
-                  (List arguments') -> do
+                  (List (ASTList arguments')) -> do
                     arguments <- traverse eval arguments'
                     evalLambda parameters body arguments
                   n ->
                     error $ "Error: Bad constructor found when evaluating Lambda, expected List but found: " <> show n
               _ -> do
-                pure $ List v -- this is data, return data.
+                pure $ List $ ASTList v -- this is data, return data.
       Lambda parameters body ->
         case V.last v of
-          (List arguments') -> do
+          (List (ASTList arguments')) -> do
             arguments <- traverse eval arguments'
             evalLambda parameters body arguments
           n ->
@@ -67,10 +72,10 @@ evalLambda parameters body arguments = do
 
 evalLambdaAtom :: AST -> Vector Text -> Vector AST -> EvalM AST
 evalLambdaAtom body parameters arguments =
-  eval $ List $ V.fromList [Lambda parameters body, List arguments]
+  eval $ List $ ASTList $ V.fromList [Lambda parameters body, List $ ASTList arguments]
 
 getLambdaParams :: AST -> Vector Text
-getLambdaParams (List args) = fmap getAtomContent args
+getLambdaParams (List (ASTList args)) = fmap getAtomContent args
 getLambdaParams ast = error $ "Bad datatype for lambda argVector: Expected List, got " <> show ast
 
 fromVector :: (Eq a, Hashable a) => Vector (a, b) -> HashMap a b

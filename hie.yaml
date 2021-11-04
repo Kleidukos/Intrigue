@@ -1,0 +1,19 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "Intrigue:lib"
+
+    - path: "./app/Main.hs"
+      component: "Intrigue:exe:Intrigue"
+
+    - path: "./app/Paths_Intrigue.hs"
+      component: "Intrigue:exe:Intrigue"
+
+    - path: "./test"
+      component: "Intrigue:test:Intrigue-test"
+
+    - path: "./benchmark/Main.hs"
+      component: "Intrigue:bench:Intrigue-benchmarks"
+
+    - path: "./benchmark/Paths_Intrigue.hs"
+      component: "Intrigue:bench:Intrigue-benchmarks"

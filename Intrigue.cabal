@@ -118,6 +118,6 @@ test-suite intrigue-test
     , hspec
     , megaparsec
     , tasty
-    , tasty-hspec
+    , tasty-hspec ^>= 1.2
     , vector
     , text-display

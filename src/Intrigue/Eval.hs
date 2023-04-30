@@ -1,5 +1,6 @@
 module Intrigue.Eval where
 
+import Control.Monad.IO.Class
 import Control.Monad.Reader 
 import Data.HashMap.Strict (HashMap)
 import Data.Hashable
@@ -78,5 +79,5 @@ getLambdaParams :: AST -> Vector Text
 getLambdaParams (List (ASTList args)) = fmap getAtomContent args
 getLambdaParams ast = error $ "Bad datatype for lambda argVector: Expected List, got " <> show ast
 
-fromVector :: (Eq a, Hashable a) => Vector (a, b) -> HashMap a b
+fromVector :: (Hashable a) => Vector (a, b) -> HashMap a b
 fromVector = V.foldr' (\(key, value) acc -> HM.insert key value acc) HM.empty

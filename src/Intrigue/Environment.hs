@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedLists #-}
+
 module Intrigue.Environment
   ( module Intrigue.Environment.Num
   , module Intrigue.Environment.Char
@@ -7,20 +8,20 @@ module Intrigue.Environment
   ) where
 
 import Data.HashMap.Strict (HashMap)
+import qualified Data.HashMap.Strict as HM
 import Data.Text (Text)
 import Data.Vector (Vector)
-import qualified Data.HashMap.Strict as HM
 
-import Intrigue.Types
 import Intrigue.Environment.Char
 import Intrigue.Environment.Num
 import Intrigue.Environment.Utils
+import Intrigue.Types
 
 baseEnv :: Environment
-baseEnv = Environment{primEnv=basePrimEnv, userEnv=HM.empty}
+baseEnv = Environment{primEnv = basePrimEnv, userEnv = HM.empty}
 
 basePrimEnv :: HashMap Text (Vector AST -> EvalM AST)
-basePrimEnv = 
+basePrimEnv =
   [ ("+", numOp add)
   , ("-", numOp sub)
   , ("number?", isNumber)

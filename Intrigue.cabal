@@ -12,6 +12,8 @@ extra-source-files:
   LICENSE.md
   README.md
 
+tested-with:        GHC ==9.4.4
+
 source-repository head
   type:     git
   location: https://github.com/kleidukos/Intrigue
@@ -85,7 +87,7 @@ library
     , base
     , hashable
     , megaparsec
-    , mtl == 2.3
+    , mtl                   ==2.3
     , parser-combinators
     , text
     , text-display
@@ -107,10 +109,10 @@ test-suite intrigue-test
   hs-source-dirs: test
   build-depends:
     , base
-    , intrigue
     , hspec
+    , intrigue
     , megaparsec
     , tasty
-    , tasty-hspec ^>= 1.2
-    , vector
+    , tasty-hspec   ^>=1.2
     , text-display
+    , vector

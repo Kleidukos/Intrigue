@@ -9,10 +9,10 @@ import qualified Data.Vector as V
 import Intrigue.Types
 
 add :: Vector AST -> EvalM AST
-add operands = pure $ foldl' (\acc number -> applyBinOp (+) number acc ) (Number 0) operands
+add operands = pure $ foldl' (\acc number -> applyBinOp (+) number acc) (Number 0) operands
 
 sub :: Vector AST -> EvalM AST
-sub operands = pure $ foldl' (\acc number -> applyBinOp (-) number acc ) (Number 0) operands
+sub operands = pure $ foldl' (\acc number -> applyBinOp (-) number acc) (Number 0) operands
 
 isNumber :: Vector AST -> EvalM AST
 isNumber args = pure $ Bool $ checkNumber $ V.head args
@@ -39,19 +39,19 @@ isZero :: Vector AST -> EvalM AST
 isZero args =
   case V.head args of
     Number n -> pure $ Bool $ n == 0
-    x        -> error $ "Argument mismatch, expected a Number, got " <> show x
+    x -> error $ "Argument mismatch, expected a Number, got " <> show x
 
 isPositive :: Vector AST -> EvalM AST
 isPositive args =
   case V.head args of
     Number n -> pure $ Bool $ n > 0
-    x        -> error $ "Argument mismatch, expected a Number, got " <> show x
+    x -> error $ "Argument mismatch, expected a Number, got " <> show x
 
 isNegative :: Vector AST -> EvalM AST
 isNegative args =
   case V.head args of
     Number n -> pure $ Bool $ n < 0
-    x        -> error $ "Argument mismatch, expected a Number, got " <> show x
+    x -> error $ "Argument mismatch, expected a Number, got " <> show x
 
 maxNum :: Vector AST -> EvalM AST
 maxNum args = pure $ Number $ V.maximum $ fmap getNumberContent args
@@ -60,17 +60,17 @@ minNum :: Vector AST -> EvalM AST
 minNum args = pure $ Number $ V.minimum $ fmap getNumberContent args
 
 numOp :: (Vector AST -> EvalM AST) -> Vector AST -> EvalM AST
-numOp fun args = 
+numOp fun args =
   if all checkNumber args
-  then fun args
-  else error $ "Argument mismatch, expected a list of numbers, got " <> show args
+    then fun args
+    else error $ "Argument mismatch, expected a list of numbers, got " <> show args
 
 transitive :: (AST -> AST -> Bool) -> Vector AST -> Bool
 transitive fun args = and $ V.zipWith fun args (V.tail args)
 
 checkNumber :: AST -> Bool
 checkNumber (Number _) = True
-checkNumber _          = False
+checkNumber _ = False
 
 getNumberContent :: AST -> Integer
 getNumberContent (Number n) = n

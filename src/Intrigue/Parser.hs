@@ -1,15 +1,15 @@
 module Intrigue.Parser where
 
 import Control.Monad.Combinators.Expr
+import Data.Text (Text)
+import qualified Data.Text as T
+import qualified Data.Vector as V
 import Text.Megaparsec
 import Text.Megaparsec.Char
-import Data.Text (Text)
-import qualified Data.Text                      as T
-import qualified Data.Vector as V
 import qualified Text.Megaparsec.Char.Lexer as L
 
-import Intrigue.Types
 import Intrigue.Lexer
+import Intrigue.Types
 
 nonAlphaNumTokens :: [Token Text]
 nonAlphaNumTokens = "!?¡¿$€%&|*×÷+-/:<=>@^_~"
@@ -18,12 +18,12 @@ parseAtom :: Parser AST
 parseAtom = do
   let atomHead = oneOf nonAlphaNumTokens
   beginning <- letterChar <|> atomHead
-  rest  <- many (letterChar <|> digitChar <|> atomHead)
+  rest <- many (letterChar <|> digitChar <|> atomHead)
   let atom = [beginning] <> rest
   pure $ case atom of
-        "#t" -> Bool True
-        "#f" -> Bool False
-        _    -> Atom $ T.pack atom
+    "#t" -> Bool True
+    "#f" -> Bool False
+    _ -> Atom $ T.pack atom
 
 parseText :: Parser AST
 parseText = do
@@ -34,9 +34,10 @@ parseText = do
 parseCharacter :: Parser AST
 parseCharacter = do
   chunk "#\\"
-  x <- (string "space" >> pure ' ')
-   <|> (string "newline" >> pure '\n')
-   <|> printChar
+  x <-
+    (string "space" >> pure ' ')
+      <|> (string "newline" >> pure '\n')
+      <|> printChar
   pure $ Character x
 
 parseNumber :: Parser AST
@@ -63,14 +64,15 @@ parseNil = do
   pure Nil
 
 parseTerm :: Parser AST
-parseTerm = (parseNil <?> "Nil")
-        <|> (parseNumber <?> "Number")
-        <|> try (parseNegNumber <?> "negative Number")
-        <|> (parseAtom <?> "Atom")
-        <|> (parseText <?> "Text")
-        <|> (parseCharacter <?> "Character")
-        <|> (parseQuote <?> "Quote")
-        <|> (parseSExp <?> "S-Expression")
+parseTerm =
+  (parseNil <?> "Nil")
+    <|> (parseNumber <?> "Number")
+    <|> try (parseNegNumber <?> "negative Number")
+    <|> (parseAtom <?> "Atom")
+    <|> (parseText <?> "Text")
+    <|> (parseCharacter <?> "Character")
+    <|> (parseQuote <?> "Quote")
+    <|> (parseSExp <?> "S-Expression")
 
 parseExp :: Parser AST
 parseExp = makeExprParser parseTerm [] <?> "Expression"
